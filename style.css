@@ -2,13 +2,42 @@
     box-sizing: border-box;
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+}
+
+#user-menu {
+   padding: 20px;
+   display: flex;
+   justify-content: center; 
+   gap: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: violet;
+    border-radius: 8px;
+    border: 1px solid black;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+input {
+    width: 300px;
+}
+
 #sketch-grid {
     width: 1000px;
     height: 1000px;
     display: flex;
     flex-direction: column;
-    flex: 0;
+    flex: 0 0 auto;
     border: 4px solid black;
+    margin-bottom: 50px;
 }
 
 .row {
@@ -19,7 +48,7 @@
 
 .square {
     flex: 1;
-    
+    border: 1px solid brown;
 }
 
 

@@ -5,17 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
     <script src="./etch-a-sketch.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
     <title>Etch a sketch</title>
 </head>
 <body>
 
-    <div id="user-menu">
-        <input type="text" placeholder="Length of the new grid">
-        <button>New grid</button>
-    </div>
-    <div id="sketch-grid">
+    <div id="container">
+        <div id="user-menu">
+            <div class="mode-selection">
+                <button id="pencil-mode">Pencil</button>
+                <button id="eraser-mode">Eraser</button>
+            </div>
+            <div>
+                <input type="text" placeholder="Length of the new grid">
+                <button>New grid</button>
+            </div>
+        </div>
 
+        <div id="sketch">
+            
+            <div id="color-picker">
+                
+            </div>
+            
+            <div id="sketch-grid">
+
+            </div>
+        </div>
     </div>
-    
+
 </body>
 </html>

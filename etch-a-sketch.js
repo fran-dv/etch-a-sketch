@@ -7,16 +7,64 @@ const newGridButton = document.querySelector('#new-grid');
 
 let pencil = true; // pencil mode by default
 
-
-
 let gridLength = 16; // Default: 16
 
 let newLengthInput = document.querySelector('#grid-length');
 
 let squares;
 
-createGrid(gridLength); // create the default grid
+const defaultTitleColor = '#000'
+const title = document.querySelector('.title');
 
+const titleChars = document.querySelectorAll('.title span');
+
+const randomColors = randomColor({
+    count: 10, 
+    luminosity: 'dark',
+});
+
+let randomIndex = null;
+const currentPaintedIndexes = [];
+
+// generate random number in a range, excluding the numbers in an array passed by parameter if it is wanted
+function randomInt (range, undesiredNumbers = [], pos = 0) {
+
+    const number = Math.floor(Math.random() * range); // generate random integer
+
+    if (!undesiredNumbers.includes(number)) { // base value
+        return number;
+    } else {
+        if (number === undesiredNumbers[pos]) {
+            return randomInt(range , undesiredNumbers, pos);
+        } else {
+            return randomInt(range , undesiredNumbers, ++pos);
+        }
+    }
+}
+
+title.addEventListener('mouseenter', () => {
+
+    
+    // reset previous painted char to default title text
+    if (currentPaintedIndexes.length >  0) {
+        currentPaintedIndexes.forEach((index) => {
+            titleChars[index].textContent = titleChars[index].textContent.toUpperCase();
+            titleChars[index].style.color = defaultTitleColor;
+        })
+        currentPaintedIndexes.length = 0;
+    }
+    
+
+    for (i = 0; i < 3; i++) {
+        randomIndex = randomInt(titleChars.length, currentPaintedIndexes);
+        currentPaintedIndexes.push(randomIndex);
+        titleChars[randomIndex].textContent = titleChars[randomIndex].textContent.toLowerCase();
+        titleChars[randomIndex].style.color = randomColors[randomInt(10)];
+    }
+    console.log(currentPaintedIndexes);
+})
+
+createGrid(gridLength); // create the default grid
 
 newGridButton.addEventListener('click', () => {
     if (Number.isInteger(parseInt(newLengthInput.value))) {
@@ -53,7 +101,6 @@ function deleteCurrentGrid() {
     }
 }
 
-
 pencilMode.addEventListener('click', () => {
     pencil = true;
 })
@@ -61,8 +108,6 @@ pencilMode.addEventListener('click', () => {
 eraserMode.addEventListener('click', () => {
     pencil = false;
 })
-
-
 
 const hoverSquareColor = 'rgb(241, 240, 239)';
 
@@ -131,8 +176,6 @@ colors = [black, white, red, blue, yellow, green, orange, purple, gray, pink, cy
 let selectedSwatch = null;
 const defaultBorderAttribute = '2px solid #000';
 const selectedBorderAttribute = '3px solid #27ff00';
-
-
 
 colors.forEach((color) => {
     const swatch = document.createElement('div');

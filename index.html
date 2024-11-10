@@ -12,41 +12,58 @@
     />
     <script src="./etch-a-sketch.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.6.1/randomColor.js"
+      integrity="sha512-rOS+dRWxckK6Ruh7+ybrHke9vr3WIqplzcu3Jg9C/BPxoEisNulj0kKjT9W6Byn/Gg817ENltr53/vWmA8GW6g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
     <title>Etch a sketch</title>
   </head>
   <body>
-    <div id="container">
-      <div id="header">
-        <div><h1 class="title">ETcH a SKEtCH</h1></div>
+    <div id="header">
+      <div>
+        <h1 class="title">
+          <span>E</span><span>T</span><span>C</span><span>H</span>
+          <span>A</span> <span>S</span><span>K</span><span>E</span><span>T</span
+          ><span>C</span><span>H</span>
+        </h1>
+      </div>
+    </div>
+
+    <div id="sketch">
+      <div id="left-column">
+        <div id="mode-selection">
+          <img
+            class="img-button"
+            id="pencil-mode"
+            src="./images/pencil.png"
+            alt="Pencil"
+          />
+          <img
+            class="img-button"
+            id="eraser-mode"
+            src="./images/eraser.png"
+            alt="Eraser"
+          />
+        </div>
+
+        <div id="swatch-grid"></div>
+
+        <div id="wheel"></div>
       </div>
 
-      <div id="sketch">
+      <div id="sketch-grid"></div>
 
-        <div id="left-column">
-          <div id="mode-selection">
-            <img class="img-button" id="pencil-mode" src="./images/pencil.png" alt="Pencil" />
-            <img class="img-button" id="eraser-mode" src="./images/eraser.png" alt="Eraser" />
-          </div>
-
-          <div id="swatch-grid"></div>
-
-          <div id="wheel"></div>
+      <div id="right-column">
+        <div>
+          <input
+            id="grid-length"
+            type="text"
+            placeholder="Length of the new grid"
+          />
+          <button id="new-grid">New grid</button>
         </div>
-
-        <div id="sketch-grid"></div>
-
-        <div id="right-column">
-          <div>
-            <input
-              id="grid-length"
-              type="text"
-              placeholder="Length of the new grid"
-            />
-            <button id="new-grid">New grid</button>
-          </div>
-
-        </div>
-
       </div>
     </div>
   </body>

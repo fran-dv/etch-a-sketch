@@ -1,59 +1,115 @@
-
 const sketchGrid = document.querySelector('#sketch-grid');
+const userMenu = document.querySelector('#user-menu');
+const pencilMode = document.querySelector('#pencil-mode');
+const eraserMode = document.querySelector('#eraser-mode');
+const swatchGrid = document.querySelector('#swatch-grid');
+const newGridButton = document.querySelector('#new-grid');
 
-let draw = true; // pencil mode by default
+let pencil = true; // pencil mode by default
+
+
 
 let gridLength = 16; // Default: 16
 
-for (let row = 0; row < gridLength; row++) {
-    const row = document.createElement('div');
-    row.setAttribute('class', 'row');
-    for (let col = 0; col < gridLength; col++) {
-        const square = document.createElement('div');
-        square.setAttribute('class', 'square');
-        square.style.backgroundColor = '#fff';
-        row.appendChild(square);
+let newLengthInput = document.querySelector('#grid-length');
+
+let squares;
+
+createGrid(gridLength); // create the default grid
+
+
+newGridButton.addEventListener('click', () => {
+    if (Number.isInteger(parseInt(newLengthInput.value))) {
+        gridLength = newLengthInput.value;
+        newLengthInput.value = '';
+        pencil = true;
+        deleteCurrentGrid();
+        createGrid(gridLength);
+        //squares = document.querySelectorAll('.square');
     }
-    sketchGrid.appendChild(row);
+})
+
+const defaultSquareColor = 'rgb(255, 255, 255)';
+
+function createGrid(gridLength) {
+    for (let row = 0; row < gridLength; row++) {
+        const row = document.createElement('div');
+        row.setAttribute('class', 'row');
+        for (let col = 0; col < gridLength; col++) {
+            const square = document.createElement('div');
+            square.setAttribute('class', 'square');
+            square.style.backgroundColor = 'rgb(255, 255, 255)';
+            row.appendChild(square);
+        }
+        sketchGrid.appendChild(row);
+    }
+    squares = document.querySelectorAll('.square');
+    updateSquares();
 }
 
-const squares = document.querySelectorAll('.square');
-const pencilMode = document.querySelector('#pencil-mode');
-const eraserMode = document.querySelector('#eraser-mode');
-const userMenu = document.querySelector('#user-menu');
-const sketch = document.querySelector('#sketch');
+function deleteCurrentGrid() {
+    while (sketchGrid.firstChild) {
+        sketchGrid.removeChild(sketchGrid.firstChild);
+    }
+}
+
 
 pencilMode.addEventListener('click', () => {
-    draw = true;
+    pencil = true;
 })
 
 eraserMode.addEventListener('click', () => {
-    draw = false;
+    pencil = false;
 })
 
-squares.forEach((square) => {
-    
-    square.addEventListener('mouseenter', () => {
-        if (draw) {
-            if (square.style.backgroundColor === 'rgb(255, 255, 255)') {
-                square.style.backgroundColor = colorPicker.color.hexString;
+
+
+const hoverSquareColor = 'rgb(241, 240, 239)';
+
+function updateSquares () {
+    let drawing = false;
+    squares.forEach((square) => {
+
+        square.addEventListener('mouseenter', () => {
+            if (!drawing && square.style.backgroundColor === defaultSquareColor) {
+                square.style.backgroundColor = hoverSquareColor;
             }
-        }
-    })
+        })
 
-    square.addEventListener('mouseenter', () => {
-        if (!draw) {
-            square.style.backgroundColor = '#fff';
-        }
-    })
-})
+        square.addEventListener('mouseleave', () => {
+            if (!drawing && square.style.backgroundColor === hoverSquareColor) {
+                square.style.backgroundColor = defaultSquareColor;
+            }
+        })
 
+        square.addEventListener('mousedown', () => {
+            drawing = true;
+            if (pencil) {
+                square.style.backgroundColor = colorPicker.color.rgbString;
+            } else {
+                square.style.backgroundColor = defaultSquareColor;
+            }
+        })
+
+        square.addEventListener('mousemove', () => {
+            if (pencil && drawing) { // Pencil mode
+                square.style.backgroundColor = colorPicker.color.rgbString;
+            } else if (!pencil && drawing) { // Eraser mode
+                square.style.backgroundColor = defaultSquareColor;
+            }
+        })
+
+        square.addEventListener('mouseup', () => {
+            drawing = false;
+        })
+    })
+}
 
 const colorPicker = new iro.ColorPicker("#wheel", {
-    width: 250,
+    width: 190,
     color: "#fff",
-    borderWidth: 1,
-    borderColor: "#0d0d0d",
+    borderWidth: 2,
+    borderColor: "#000",
     layout: [
         { 
           component: iro.ui.Wheel
@@ -67,19 +123,66 @@ const colorPicker = new iro.ColorPicker("#wheel", {
       ]
 });
 
-const swatchGrid = document.querySelector('#swatch-grid');
-
 const [black, white, red, blue, yellow, green, orange, purple, gray, pink, cyan, brown] = 
-    ["#000000", "#FFFFFF", "#FF0000", "#0000FF", "#FFFF00", "#00FF00", "#FFA500", "#800080", "#808080", "#FFC0CB", "#00FFFF", "#A52A2A"];
+    ["rgb(0, 0, 0)", "rgb(255, 255, 255)", "rgb(255, 0, 0)", "rgb(0, 0, 255)", "rgb(255, 255, 0)", "rgb(0, 255, 0)", "rgb(255, 165, 0)", "rgb(128, 0, 128)", "rgb(128, 128, 128)", "rgb(255, 192, 203)", "rgb(0, 255, 255)", "rgb(165, 42, 42)"];
 
 colors = [black, white, red, blue, yellow, green, orange, purple, gray, pink, cyan, brown];
+
+let selectedSwatch = null;
+const defaultBorderAttribute = '2px solid #000';
+const selectedBorderAttribute = '3px solid #27ff00';
+
+
 
 colors.forEach((color) => {
     const swatch = document.createElement('div');
     swatch.setAttribute('class', 'swatch');
     swatch.style.backgroundColor = color;
     swatchGrid.appendChild(swatch);
-    console.log(color);
+
+    swatch.addEventListener('mouseenter', () => {
+        if (swatch !== selectedSwatch) {
+            swatch.style.borderColor = gray;
+        }
+    })
+
+    swatch.addEventListener('mouseleave', () => {
+        if (swatch !== selectedSwatch) {
+            swatch.style.border = defaultBorderAttribute;
+        }
+    })
+
+    swatch.addEventListener('click', () => {
+        colorPicker.color.rgbString = color;
+        // change the highlighted swatch to the current selected
+        if (!selectedSwatch) {
+            selectedSwatch = swatch;
+        } else {
+            selectedSwatch.style.border = defaultBorderAttribute;
+        }
+       
+        selectedSwatch = swatch;
+        selectedSwatch.style.border = selectedBorderAttribute;
+    })
 })
 
+colorPicker.on("color:change", () => {
+    if (selectedSwatch) {
+        if (colorPicker.color.rgbString !== selectedSwatch.style.backgroundColor) {
+            selectedSwatch.style.border = defaultBorderAttribute;
+            selectedSwatch = null;
+        }
+    } else if (!selectedSwatch && colors.indexOf(colorPicker.color.rgbString) !== -1) { // if color picked from wheel is equal to any swatch
+        selectedSwatch = findSwatchByColor(colorPicker.color.rgbString);
+        selectedSwatch.style.border = selectedBorderAttribute;
+    }
+});
+
+function findSwatchByColor(colorToFind) { // the color must be in rgb string
+    for (let i = 0; i < swatchGrid.children.length; i++) {
+        if (swatchGrid.children[i].style.backgroundColor === colorToFind) {
+            return swatchGrid.children[i];
+        }
+    }    
+}
 

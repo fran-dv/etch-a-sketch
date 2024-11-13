@@ -146,6 +146,15 @@ div.square:hover {
     justify-content: center;
     align-items: flex-start;
     flex-basis: auto;
+    gap: 50px;
+}
+
+
+
+.screenshot {
+    width: 67px;
+    height: auto;
+    margin: 0 10px;
 }
 
 #grid-size {

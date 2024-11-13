@@ -4,11 +4,11 @@ const pencilMode = document.querySelector('#pencil-mode');
 const eraserMode = document.querySelector('#eraser-mode');
 const swatchGrid = document.querySelector('#swatch-grid');
 const resizeButtons = document.querySelectorAll('#grid-size .resize');
+const screenshotButton = document.querySelector('.img-button.screenshot');
 
 let pencil = true; // pencil mode by default
 
 let gridLength = 16; // Default: 16
-
 
 let squares;
 
@@ -51,7 +51,6 @@ title.addEventListener('mouseenter', () => {
         titleChars[randomIndex].textContent = titleChars[randomIndex].textContent.toLowerCase();
         titleChars[randomIndex].style.color = randomColors[randomInt(10)];
     }
-    console.log(currentPaintedIndexes);
 })
 
 createGrid(gridLength); // create the default grid
@@ -227,3 +226,11 @@ function findSwatchByColor(colorToFind) { // the color must be in rgb string
     }    
 }
 
+screenshotButton.addEventListener('click', () => {
+    html2canvas(sketchGrid, {scale : 2}).then(function(canvas) {
+        console.log(canvas);
+        Canvas2Image.saveAsPNG(canvas, 720, 720, 'your_draw');
+    });
+    
+    
+});

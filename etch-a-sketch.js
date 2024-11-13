@@ -3,13 +3,12 @@ const userMenu = document.querySelector('#user-menu');
 const pencilMode = document.querySelector('#pencil-mode');
 const eraserMode = document.querySelector('#eraser-mode');
 const swatchGrid = document.querySelector('#swatch-grid');
-const newGridButton = document.querySelector('#new-grid');
+const resizeButtons = document.querySelectorAll('#grid-size .resize');
 
 let pencil = true; // pencil mode by default
 
 let gridLength = 16; // Default: 16
 
-let newLengthInput = document.querySelector('#grid-length');
 
 let squares;
 
@@ -27,24 +26,16 @@ let randomIndex = null;
 const currentPaintedIndexes = [];
 
 // generate random number in a range, excluding the numbers in an array passed by parameter if it is wanted
-function randomInt (range, undesiredNumbers = [], pos = 0) {
+function randomInt (range, undesiredNumbers = []) {
+    let number = Math.floor(Math.random() * range); // generate random integer
 
-    const number = Math.floor(Math.random() * range); // generate random integer
-
-    if (!undesiredNumbers.includes(number)) { // base value
-        return number;
-    } else {
-        if (number === undesiredNumbers[pos]) {
-            return randomInt(range , undesiredNumbers, pos);
-        } else {
-            return randomInt(range , undesiredNumbers, ++pos);
-        }
+    while (undesiredNumbers.includes(number)) {
+        number = Math.floor(Math.random() * range);
     }
+    return number;
 }
 
 title.addEventListener('mouseenter', () => {
-
-    
     // reset previous painted char to default title text
     if (currentPaintedIndexes.length >  0) {
         currentPaintedIndexes.forEach((index) => {
@@ -54,7 +45,6 @@ title.addEventListener('mouseenter', () => {
         currentPaintedIndexes.length = 0;
     }
     
-
     for (i = 0; i < 3; i++) {
         randomIndex = randomInt(titleChars.length, currentPaintedIndexes);
         currentPaintedIndexes.push(randomIndex);
@@ -66,15 +56,23 @@ title.addEventListener('mouseenter', () => {
 
 createGrid(gridLength); // create the default grid
 
-newGridButton.addEventListener('click', () => {
-    if (Number.isInteger(parseInt(newLengthInput.value))) {
-        gridLength = newLengthInput.value;
-        newLengthInput.value = '';
+resizeButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+        switch (button.getAttribute('class')) {
+            case 'img-button resize small':
+                gridLength = 16;    
+                break;
+            case 'img-button resize medium':
+                gridLength = 30;    
+                break;
+            case 'img-button resize big':
+                gridLength = 50;    
+                break;
+        }
         pencil = true;
         deleteCurrentGrid();
         createGrid(gridLength);
-        //squares = document.querySelectorAll('.square');
-    }
+    })
 })
 
 const defaultSquareColor = 'rgb(255, 255, 255)';
@@ -175,7 +173,7 @@ colors = [black, white, red, blue, yellow, green, orange, purple, gray, pink, cy
 
 let selectedSwatch = null;
 const defaultBorderAttribute = '2px solid #000';
-const selectedBorderAttribute = '3px solid #27ff00';
+const selectedBorderAttribute = '4px solid #D0B8A8';
 
 colors.forEach((color) => {
     const swatch = document.createElement('div');
@@ -185,7 +183,7 @@ colors.forEach((color) => {
 
     swatch.addEventListener('mouseenter', () => {
         if (swatch !== selectedSwatch) {
-            swatch.style.borderColor = gray;
+            swatch.style.borderColor = '#A6AEBF';
         }
     })
 
@@ -203,7 +201,7 @@ colors.forEach((color) => {
         } else {
             selectedSwatch.style.border = defaultBorderAttribute;
         }
-       
+        pencil = true;
         selectedSwatch = swatch;
         selectedSwatch.style.border = selectedBorderAttribute;
     })

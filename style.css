@@ -18,9 +18,11 @@ body {
 
 /* 
 color scheme:
-- #FF4C4C 
-
-
+- #F8EDE3 background
+- #DFD3C3
+- #D0B8A8
+- #C5705D
+(Colors source: https://colorhunt.co/palette/f8ede3dfd3c3d0b8a8c5705d)
 */
 
 #header {
@@ -66,11 +68,10 @@ input {
 #sketch {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 32px;
     padding: 50px;
 }
 
-#right-column, 
 #left-column {
     width: 190px;
     display: flex;
@@ -136,5 +137,37 @@ input {
 
 div.square:hover {
     background-color: gray;
+}
+
+#right-column {
+    min-width: 190px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    flex-basis: auto;
+}
+
+#grid-size {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+}
+
+.resize.small {
+    width: 57px;
+    height: auto;
+}
+
+.resize.medium {
+    width: 70px;
+    height: auto;
+}
+
+.resize.big {
+    width: 87px;
+    height: auto;
 }
 

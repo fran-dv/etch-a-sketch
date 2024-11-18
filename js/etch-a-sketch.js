@@ -12,18 +12,26 @@ let gridLength = 16; // Default: 16
 
 let squares;
 
-const defaultTitleColor = '#000'
+const defaultTitleColor = '#000';
 const title = document.querySelector('.title');
 
-const titleChars = document.querySelectorAll('.title span');
+const titleText = 'ETCH A SKETCH';
 
 const randomColors = randomColor({
     count: 10, 
     luminosity: 'dark',
 });
 
-let randomIndex = null;
-const currentPaintedIndexes = [];
+// generate each character of title within spans
+const titleArray = titleText.split('');
+title.innerHTML = '';
+for (let i = 0; i < titleArray.length; i++) {
+    if (titleArray[i] === ' ') {
+        title.innerHTML += ' ';
+    } else {
+        title.innerHTML += `<span>${titleArray[i]}</span>`
+    }
+}
 
 // generate random number in a range, excluding the numbers in an array passed by parameter if it is wanted
 function randomInt (range, undesiredNumbers = []) {
@@ -34,6 +42,11 @@ function randomInt (range, undesiredNumbers = []) {
     }
     return number;
 }
+
+let randomIndex = null;
+const currentPaintedIndexes = [];
+
+const titleChars = document.querySelectorAll('.title span');
 
 title.addEventListener('mouseenter', () => {
     // reset previous painted char to default title text
@@ -51,27 +64,6 @@ title.addEventListener('mouseenter', () => {
         titleChars[randomIndex].textContent = titleChars[randomIndex].textContent.toLowerCase();
         titleChars[randomIndex].style.color = randomColors[randomInt(10)];
     }
-})
-
-createGrid(gridLength); // create the default grid
-
-resizeButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-        switch (button.getAttribute('class')) {
-            case 'img-button resize small':
-                gridLength = 16;    
-                break;
-            case 'img-button resize medium':
-                gridLength = 30;    
-                break;
-            case 'img-button resize big':
-                gridLength = 50;    
-                break;
-        }
-        pencil = true;
-        deleteCurrentGrid();
-        createGrid(gridLength);
-    })
 })
 
 const defaultSquareColor = 'rgb(255, 255, 255)';
@@ -97,6 +89,28 @@ function deleteCurrentGrid() {
         sketchGrid.removeChild(sketchGrid.firstChild);
     }
 }
+
+createGrid(gridLength); // create the default grid
+
+resizeButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+        switch (button.getAttribute('class')) {
+            case 'img-button resize small':
+                gridLength = 16;    
+                break;
+            case 'img-button resize medium':
+                gridLength = 30;    
+                break;
+            case 'img-button resize big':
+                gridLength = 50;    
+                break;
+        }
+        pencil = true;
+        deleteCurrentGrid();
+        createGrid(gridLength);
+    })
+})
+
 
 pencilMode.addEventListener('click', () => {
     pencil = true;
@@ -176,10 +190,11 @@ const selectedBorderAttribute = '4px solid #D0B8A8';
 
 colors.forEach((color) => {
     const swatch = document.createElement('div');
-    swatch.setAttribute('class', 'swatch');
+    swatch.setAttribute('class', `swatch color${colors.indexOf(color)}`);
     swatch.style.backgroundColor = color;
     swatchGrid.appendChild(swatch);
 
+    // hover and selected effect
     swatch.addEventListener('mouseenter', () => {
         if (swatch !== selectedSwatch) {
             swatch.style.borderColor = '#A6AEBF';
@@ -212,19 +227,12 @@ colorPicker.on("color:change", () => {
             selectedSwatch.style.border = defaultBorderAttribute;
             selectedSwatch = null;
         }
-    } else if (!selectedSwatch && colors.indexOf(colorPicker.color.rgbString) !== -1) { // if color picked from wheel is equal to any swatch
-        selectedSwatch = findSwatchByColor(colorPicker.color.rgbString);
+    } else if (!selectedSwatch && colors.includes(colorPicker.color.rgbString)) { // color picked from wheel is equal to any swatch
+        selectedSwatch = document.querySelector(`.swatch.color${colors.indexOf(colorPicker.color.rgbString)}`);
         selectedSwatch.style.border = selectedBorderAttribute;
     }
 });
 
-function findSwatchByColor(colorToFind) { // the color must be in rgb string
-    for (let i = 0; i < swatchGrid.children.length; i++) {
-        if (swatchGrid.children[i].style.backgroundColor === colorToFind) {
-            return swatchGrid.children[i];
-        }
-    }    
-}
 
 screenshotButton.addEventListener('click', () => {
     html2canvas(sketchGrid, {scale : 2}).then(function(canvas) {
